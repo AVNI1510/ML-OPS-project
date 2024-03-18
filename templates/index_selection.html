@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Sort Visualization</title>
+    <style>
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .box {
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <form id="inputForm">
+        <label for="numbers">Enter numbers (comma-separated):</label><br>
+        <input type="text" id="numbers" name="numbers"><br><br>
+        <button type="submit">Sort</button>
+    </form>
+
+    <div class="container" id="sortedArray">
+        <!-- Sorted array will be rendered here -->
+    </div>
+
+    <script>
+        function displaySortedArray(steps) {
+            const sortedArrayContainer = document.getElementById('sortedArray');
+            sortedArrayContainer.innerHTML = ''; // Clear previous content
+            steps.forEach((step, index) => {
+                setTimeout(() => {
+                    const sortedNumbers = step;
+                    sortedArrayContainer.innerHTML = sortedNumbers.map(number => `<div class="box">${number}</div>`).join('');
+                }, index * 1000); // Change the time delay as per your requirement
+            });
+        }
+
+        document.getElementById('inputForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const numbersInput = document.getElementById('numbers').value;
+            fetch('/sort_selection', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `numbers=${numbersInput}`
+            })
+            .then(response => response.json())
+            .then(steps => displaySortedArray(steps))
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
